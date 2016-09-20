@@ -9,7 +9,6 @@ def makevideo(scene):
 	prev_ending = 0.0
 
 	images = sorted(images, key = lambda elem: elem["point"])
-	#print ('\nmaking with {video}\n\tscenery is {scene}'.format(video = vid_path, scene = scene))
 	
 	for elem in images:
 		image = elem["img"] 
