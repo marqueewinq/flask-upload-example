@@ -3,7 +3,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, render_t
 from werkzeug.utils import secure_filename
 
 UPLOAD_DIR = 'upload/'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'mp4'])
 
 app = Flask(__name__)
 app.config['UPLOAD_DIR'] = UPLOAD_DIR
@@ -11,7 +11,7 @@ app.config['UPLOAD_DIR'] = UPLOAD_DIR
 app.secret_key = 'super-secret-key'
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+    return '.' in filename and (filename.rsplit('.', 1)[1]).lower() in ALLOWED_EXTENSIONS
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
@@ -23,8 +23,9 @@ def upload_file():
         print (files)
         for file in files:
             if file.filename == '':
-                flash('No selected file')
+                flash('Missing file')
             if file and allowed_file(file.filename):
+                flash('File loaded: {0}'.format(file.filename))
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.root_path, os.path.join(app.config['UPLOAD_DIR'], filename)))
         return render_template('index.html', uploaded = True)
