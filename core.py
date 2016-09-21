@@ -15,11 +15,11 @@ def makevideo(scene):
 		point = elem["point"]
 		duration = elem["duration"]
 
-		clip = ImageClip(image)
+		clip = ImageClip(image, transparent = False)
 		clip.resize(video.size)
-		clip = clip.set_duration(duration)
+		clip = clip.set_duration(t = duration)
 		to_concat.append(video.subclip(t_start = prev_ending, t_end = point))
-		to_concat.append(clip)
+		to_concat.append(clip.copy())
 		prev_ending = point
 
 	to_concat.append(video.subclip(t_start = prev_ending))
