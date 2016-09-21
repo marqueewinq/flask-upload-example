@@ -25,7 +25,7 @@ def makevideo(scene):
 	to_concat.append(video.subclip(t_start = prev_ending))
 	return concatenate_videoclips(to_concat)
 
-scene = {"video": "bin/video/milk.mp4", "images": [{"img": "bin/poster_blue.png", "point": 5, "duration": 2}, {"img": "bin/poster_red.png", "point": 10, "duration": 3}]}
-makevideo(scene).write_videofile("result.mp4")
+#scene = {"video": "bin/video/milk.mp4", "images": [{"img": "bin/poster_blue.png", "point": 5, "duration": 2}, {"img": "bin/poster_red.png", "point": 10, "duration": 3}]}
+#makevideo(scene).write_videofile("result.mp4")
 
 	

@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash, send_from_directory
 from werkzeug.utils import secure_filename
 
-UPLOAD_DIR = 'upload/'
+UPLOAD_DIR = 'upload'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'mp4'])
 
 app = Flask(__name__)
@@ -16,10 +16,23 @@ def allowed_file(filename):
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        if 'files' not in request.files:
-            flash('No file part')
+        if 'video_file' not in request.files:
+            flash('No video_file part')
             return redirect(request.url)
-        files = request.files.getlist("files")
+        if 'image_files' not in request.files:
+            flash('No image_files part')
+            return redirect(request.url)
+
+        file = request.files.getlist("video_file")[0]
+        print (file)
+        flash('File loaded: {0}'.format(file.filename))
+        filename = secure_filename(file.filename)
+        vid_filename = filename
+        vid_path = os.path.join(app.root_path, os.path.join(app.config['UPLOAD_DIR'], filename))
+        file.save(vid_path)
+
+        files = request.files.getlist("image_files")
+        images_paths = []
         print (files)
         for file in files:
             if file.filename == '':
@@ -28,8 +41,13 @@ def upload_file():
                 flash('File loaded: {0}'.format(file.filename))
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.root_path, os.path.join(app.config['UPLOAD_DIR'], filename)))
-        return render_template('index.html', uploaded = True)
+                images_paths.append("/uploads/{}".format(filename))
+        return render_template('index.html', uploaded = True, vid_path = "/uploads/{}".format(vid_filename), images_paths = images_paths)
     return render_template('index.html', uploaded = False)
+
+'''
+
+'''
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):

@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Flask upload example</title>
-	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+	<link rel=stylesheet type=text/css href="/static/css/style.css">
 </head>
 <body>
 	{% with messages = get_flashed_messages() %}
@@ -15,10 +15,32 @@
 	  {% endif %}
 	{% endwith %}
 
+	{% if uploaded %}
+		<div id='root'></div>
+	    <script src="/static/govnokod.js"></script>
+	    <script src="/static/react-html5-video-editor.js"></script>
+	    <script type="text/javascript">
+	    	scene = govnokod_add_video("{{vid_path}}");
+	    	last_position = undefined;
+	    	image = undefined;
+	    	ReactHtml5VideoEditor.render_editor(vid_path = "{{vid_path}}");
+	    </script>
+
+	<p>
+      <p>Duration: <input id = "duration" type="text" name="duration" value = "5">
+      <p> <button onClick="javascript:govnokod_send()">Send</button>
+		<ul class=flashes>
+    {% for image in images_paths %}	
+	      <li><img src = "{{image}}" onClick="javascript:govnokod_select_image('{{image}}')"></li>
+   	{% endfor %}
+	    </ul>
+    {% else %}
     <h1>Upload video and images</h1>
     <form action="" method=post enctype=multipart/form-data>
-      <p>Video: <input type=file name="files" multiple="">
-      <p>Images: <input type=file name="files" multiple="">
+      <p>Video: <input type=file name="video_file">
+      <p>Images: <input type=file name="image_files" multiple="">
          <input type=submit value=Upload>
     </form>
+    {% endif %}
+
 </div>
